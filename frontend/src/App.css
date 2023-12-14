@@ -1,38 +1,63 @@
-.App {
-  text-align: center;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  @font-face {
+    font-family: dahang;
+    font-weight: 400;
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
+    src: url(./font/nanum-dahang.ttf) format('truetype');
+  }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+  @font-face {
+    font-family: nanum-square;
+    font-weight: 400;
+
+    src: url(./font/NanumSquareR.ttf) format('truetype');
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+* {
+  font-family: nanum-square;
+  font-size: 1.1rem;
+}
+
+.tableContainer {
+  background-color: pink;
+  border-radius: 20px;
+  height: 42rem;
+  padding: 0 10px 10px 10px;
+  overflow: scroll;
+}
+
+Table thead {
+  position: sticky;
+  top: 0px;
+  margin: 0 0 0 0;
+}
+
+.App {
+  /* display: flex; */
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  height: 100vh;
+}
+
+.box {
+  width: 300px;
+  min-width: 200px; /* 추가된 부분 */
+  height: 200px;
+  background-color: #3498db;
   color: white;
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .box {
+    width: 80%;
   }
 }
