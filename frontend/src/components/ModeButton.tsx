@@ -9,7 +9,7 @@ export type IModeButtonProps = {
 
 const ModeButton: FC<IModeButtonProps> = ({mode, currentMode, onClick}) => (
   <button
-    className={`flex items-center space-x-[6px] rounded py-2 px-[18px] text-sm font-medium ${
+    className={`border flex items-center space-x-[6px] py-2 px-[18px] text-sm font-medium ${
       currentMode === mode ? 'text-primary bg-[#f4f7ff]' : 'text-body-color'
     }`}
     onClick={onClick}
