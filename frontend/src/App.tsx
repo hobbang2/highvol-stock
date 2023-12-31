@@ -1,10 +1,16 @@
 import React from 'react'
-import logo from './logo.svg'
 import './App.css'
+import {ResponsiveProvider} from './contexts'
+import Main from './pages/Main'
 
-function App() {
-  console.log('App called')
-  return <h1>Hello world!</h1>
+const App: React.FC = () => {
+  return (
+    <ResponsiveProvider>
+      <div className="App">
+        <Main></Main>
+      </div>
+    </ResponsiveProvider>
+  )
 }
 
 export default App
