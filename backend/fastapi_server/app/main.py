@@ -8,7 +8,7 @@ db = mongodb.MongoDB()
 
 # CORS settings
 origins = [
-    "http://localhost:3000",  # Replace with your React app's URL
+    "http://localhost:3000",
 ]
 
 app.add_middleware(

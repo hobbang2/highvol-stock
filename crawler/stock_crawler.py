@@ -12,14 +12,31 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from datetime import datetime, timedelta
 import json
 import asyncio
+from dotenv import load_dotenv
+import os 
 
+# load .env
+load_dotenv()
+MONGO_DB_URL = os.environ.get('MONGO_DB_URL')
 
+URL_RISE = "https://finance.naver.com/sise/sise_rise.naver?sosok="
+# 상한가 종목을 따로 파싱하지 않고 상승률이 29% 초과면 상한가로 보자
+URL_UPPER = "https://finance.naver.com/sise/sise_upper.naver"
+LABEL = ["현재가", "전일비", "등락률", "거래량"]
+LABEL = {"현재가": "stock_price", 
+            "전일비": "day_change_proportion",
+            "등락률": "increase_rate",
+            "거래량": "trade_volume"}
+
+# 10개의 기사를 관련도 순으로 전달
+NAVER_NEWS_URL = os.environ.get('NAVER_NEWS_URL')
+NAVER_CLIENT_ID = os.environ.get('NAVER_CLIENT_ID')
+NAVER_CLIENT_SECRET = os.environ.get('NAVER_CLIENT_SECRET')
 
 lower_bound_trade_amount = 10000000
 
 # 상승 목록 가져오기 
 # - 종목명, 현재가, 전일비, 등락률, 거래량 
-
 
 def ts(sleep_sec:int) : 
     
@@ -57,6 +74,7 @@ def get_news_information(stock_name:str)->list:
         return []
 
 def get_stock_information(sosok:int)->list:
+    
     """주식 정보를 크롤링하는 함수
 
     Args:
