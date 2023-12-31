@@ -1,0 +1,7 @@
+{
+  "apiBaseUrl": "https://api.example.com",
+  "endpoints": {
+    "stocks": "/stocks",
+    "historicalStocks": "/stocks/historical"
+  }
+}
