@@ -4,7 +4,7 @@
 ![ce62bed0-d429-4d7e-8c08-31d898be1bcc](https://github.com/hobbang2/highvol-stock/assets/46401358/0ddf12ca-116d-4bdc-be61-0e68995ccf53)
 
 ## 01. 개요  
-상한가를 기록했거나 거래량이 1,000만주 이상인 주식의 정보로 하루의 시황을 정리하고자 함  
+천만주 이상 거래되었거나 상한가를 기록한 주식의 정보로 하루의 시황을 정리하고자 함  
 ${\rightarrow}$ 매일 종목을 찾고 뉴스 검색, 정리의 반복  
 ${\Rightarrow}$ <strong>이 과정을 자동화해서 보여주는 사이트를 만들어보자!</strong>
 
