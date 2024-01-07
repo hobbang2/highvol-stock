@@ -17,7 +17,7 @@ RUN python3 -m venv $POETRY_VENV \
 	&& $POETRY_VENV/bin/pip install poetry==${POETRY_VERSION}
 
 # Create a new stage from the base python image
-FROM python-base as example-app
+FROM python-base as backend-app
 
 # Copy Poetry to app image
 COPY --from=poetry-base ${POETRY_VENV} ${POETRY_VENV}
