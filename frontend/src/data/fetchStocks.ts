@@ -57,7 +57,7 @@ const convertStocks = (result: IStockData[]): IPick[] => {
     '주식 가격 (원)': {data: parseFloat(stock.stock_price), visible: true},
     '거래량 (주)': {data: stock.trade_volume, visible: true},
     '상승률 (%)': {data: stock.increase_rate, visible: true},
-    요약: {data: stock.summary, visible: false},
+    요약: {data: stock.summary, visible: true},
     '연관 뉴스': {data: stock.reference_news, visible: true},
     stock_code: {data: stock.stock_code, visible: false},
     sosok: {data: stock.sosok, visible: false}
