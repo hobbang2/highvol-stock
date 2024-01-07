@@ -1,21 +1,17 @@
-from selenium import webdriver
-import chromedriver_autoinstaller as ca
-from selenium.webdriver.common.by import By 
-import time, os, sys
-from bs4 import BeautifulSoup
-import re
-import os
-import sys
-import urllib.request
-from typing import List
 from motor.motor_asyncio import AsyncIOMotorClient
+from agents.news_agent import lookup as news_agent
+from selenium.webdriver.common.by import By 
 from datetime import datetime, timedelta
-import json
-import asyncio
+import chromedriver_autoinstaller as ca
+from selenium import webdriver
 from dotenv import load_dotenv
-import os 
+from bs4 import BeautifulSoup
+import time, os, sys, re
+from typing import List
+import urllib.request
+import asyncio
+import json
 
-# load .env
 load_dotenv()
 MONGO_DB_URL = os.environ.get('MONGO_DB_URL')
 
@@ -42,6 +38,15 @@ def ts(sleep_sec:int) :
     
     time.sleep(ts)
 
+def get_news_summary(reference_news:List[dict]):
+
+    title_str ='\n'.join( [f"- {item["title"]}" for item in reference_news])
+    ret_str = f"""
+    header:
+    {title_str}
+    answer:
+    """
+    return ret_str
 
 def get_news_information(stock_name:str)->list:
 
@@ -126,7 +131,7 @@ def get_stock_information(sosok:int)->list:
         # 네이버 뉴스 API를 활용하여 관련 뉴스 정보를 가져옴
         reference_information["reference_news"] = get_news_information(stock_name)
         # [TODO] gpt로 뉴스 정보를 요약한 정보를 가져옴
-        reference_information["summary"] = ""
+        reference_information["summary"] = get_news_summary(reference_information["reference_news"])
         reference_information["created_at"] = datetime.now().strftime("%Y-%m-%d")
         reference_information["sosok"] = sosok
 
@@ -143,8 +148,8 @@ async def insert_stock_info_to_db(stock_information:List[dict]):
         return db
 
     db = await get_db()
-    stock_collection = db.get_collection("stock")
-    result =  await stock_collection.insert_many(stock_information)
+    stock_collection = db.get_collection("test_stock")
+    result = await stock_collection.insert_many(stock_information)
 
     return result
 
