@@ -38,9 +38,9 @@ def ts(sleep_sec:int) :
     
     time.sleep(ts)
 
-def get_news_summary(reference_news:List[dict]):
+def get_input_str_for_summary(reference_news:List[dict]):
 
-    title_str ='\n'.join( [f"- {item["title"]}" for item in reference_news])
+    title_str ='\n'.join( [f"- {item['title']}" for item in reference_news])
     ret_str = f"""
     header:
     {title_str}
@@ -130,8 +130,8 @@ def get_stock_information(sosok:int)->list:
         # 아래 두 가지 작업은 크롤링 후에 각 item의 stock_name만 가지고 진행해도 됨
         # 네이버 뉴스 API를 활용하여 관련 뉴스 정보를 가져옴
         reference_information["reference_news"] = get_news_information(stock_name)
-        # [TODO] gpt로 뉴스 정보를 요약한 정보를 가져옴
-        reference_information["summary"] = get_news_summary(reference_information["reference_news"])
+        # gpt로 뉴스 타이틀을 활용하여 상승 요인 추출
+        reference_information["summary"] = news_agent(get_input_str_for_summary(reference_information["reference_news"]))
         reference_information["created_at"] = datetime.now().strftime("%Y-%m-%d")
         reference_information["sosok"] = sosok
 
@@ -142,13 +142,12 @@ def get_stock_information(sosok:int)->list:
 async def insert_stock_info_to_db(stock_information:List[dict]):
 
     async def get_db():
-        # client = AsyncIOMotorClient('localhost',27017)
         client = AsyncIOMotorClient(MONGO_DB_URL)
         db = client.get_database("daily_stock")
         return db
 
     db = await get_db()
-    stock_collection = db.get_collection("test_stock")
+    stock_collection = db.get_collection("stock")
     result = await stock_collection.insert_many(stock_information)
 
     return result

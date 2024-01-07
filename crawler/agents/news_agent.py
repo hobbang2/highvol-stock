@@ -1,11 +1,8 @@
 
 from langchain import PromptTemplate
 from langchain.chat_models import ChatOpenAI
-from langchain.chains.summarize import load_summarize_chain
 from langchain.chains import LLMChain
 
-from langchain.agents import initialize_agent, Tool, AgentType
-from tools.tools import  get_news_summary
 from langchain.text_splitter import CharacterTextSplitter
 
 def lookup(news_headers: str)->str:
@@ -29,12 +26,6 @@ def lookup(news_headers: str)->str:
     {information}
     """
 )
-    # chain = load_summarize_chain(llm, chain_type="stuff",prompt=summary_prompt_template)
     chain = LLMChain(llm=llm, prompt=summary_prompt_template)
 
-    text_splitter = CharacterTextSplitter.from_tiktoken_encoder(
-    chunk_size=1000, chunk_overlap=0
-    )
-    split_docs = text_splitter.create_documents(news_headers)
-   
     return chain.run(information = news_headers)
