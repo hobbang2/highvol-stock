@@ -9,8 +9,7 @@ ${\rightarrow}$ 매일 종목을 찾고 뉴스 검색, 정리의 반복
 ${\Rightarrow}$ <strong>이 과정을 자동화해서 보여주는 사이트를 만들어보자!</strong>
 
 ## 02. 프로젝트 구조 
-
-![highvol drawio](https://github.com/hobbang2/highvol-stock/assets/46401358/6817932c-dcad-4573-89c2-4aa22beca0e1)
+![highvol drawio (1)](https://github.com/hobbang2/highvol-stock/assets/46401358/d65f7fb0-17e0-4326-aafa-b32afe6b92a2)
 
 ## 03. 결과 
 ![image](https://github.com/hobbang2/highvol-stock/assets/46401358/35185a69-2795-4552-931d-aed8098a9b9d)
