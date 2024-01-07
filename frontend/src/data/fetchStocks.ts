@@ -115,7 +115,7 @@ const convertPeriodStock = (
 
 export const fetchStocks = (today: string): Promise<IPick[]> =>
   new Promise((resolve, reject) => {
-    fetch(`${config.apiBaseUrl}/${config.endpoints.stocks}/${today}`)
+    fetch(`${config.apiBaseUrl}${config.endpoints.stocks}/${today}`)
       .then(res => res.json())
       .then((data: unknown) => {
         const result = convertStocks(data as IStockData[])
@@ -128,7 +128,7 @@ export const fetchPeriodStocks = (
   period: number
 ): Promise<{html: string; detail_info: IPeriodStockData[]}> =>
   new Promise((resolve, reject) => {
-    fetch(`${config.apiBaseUrl}/${config.endpoints.historicalStocks}/${period}`)
+    fetch(`${config.apiBaseUrl}${config.endpoints.historicalStocks}/${period}`)
       .then(res => res.json())
       .then((data: unknown) => {
         const result = convertPeriodStock(data as IPeriodStockData[])

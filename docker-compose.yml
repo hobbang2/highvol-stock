@@ -1,0 +1,44 @@
+version: "3.1"
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+    volumes:
+      - ./db/mongo-data:/data/db # MongoDB data persistence
+
+  mongo-express:
+    image: mongo-express:1.0.0-alpha.4
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_ROOT_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_ROOT_PASSWORD}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@mongo:27017/
+  # Backend service (FastAPI)
+  backend:
+    build:
+      context: ./backend/fastapi_server # backend code with Dockerfile
+    restart: always
+    ports:
+      - 8000:8000
+    environment:
+      MONGODB_URL: mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@mongo:27017/ # MongoDB Connection URI
+    depends_on:
+      - mongo
+
+  # Frontend service (React)
+  frontend:
+    build:
+      context: ./frontend # frontend code with Dockerfile
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - backend
