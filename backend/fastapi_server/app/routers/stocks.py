@@ -20,7 +20,7 @@ load_dotenv(dotenv_path=env_path)
 MONGO_DB_URL = os.getenv("MONGODB_URL")
 
 async def get_db():
-    # client = AsyncIOMotorClient('localhost',27017)
+    
     client = AsyncIOMotorClient(MONGO_DB_URL)
     db = client.get_database("daily_stock")
     return db
@@ -49,18 +49,15 @@ async def get_nweeks_stocks(nweeks:int, db = Depends(get_db)):
     # if nweeks not in(4, 30):
         # 임의 조작 시 에러 
         # return JSONResponse(content={"error": "Invalid number of weeks. Must be 7 or 30."}, status_code=400)
-    print(nweeks)
     today = datetime.today()
     # nweeks 전의 날짜 계산
-    seven_days_ago = today - timedelta(weeks=nweeks)
+    nweeks_ago = today - timedelta(weeks=nweeks)
     # yyyy-mm-dd 형태로 포맷팅
-    formatted_seven_days_ago = seven_days_ago.strftime("%Y-%m-%d")
-    print(formatted_seven_days_ago)
-    # [TODO] 현재 날짜부터 ndays 사이에 2회 이상 언급된 주식 정보 가져오기
-    # [REF] 세부 정보는 frontend에서 처리 (이름만 뽑거나, 상세 정보를 테이블로 보여주거나 )
+    formatted_nweeks_ago = nweeks_ago.strftime("%Y-%m-%d")
 
+    #  현재 날짜부터 ndays 사이에 2회 이상 언급된 주식 정보 가져오기
     result = await db.stock.aggregate([
-        {"$match": {"created_at": {"$gte": formatted_seven_days_ago}}},
+        {"$match": {"created_at": {"$gte": formatted_nweeks_ago}}},
         {"$group": {"_id": {"stock_name": "$stock_name", "stock_code": "$stock_code"}, "count": {"$sum": 1}}},
         {"$match": {"count": {"$gte": 2}}},
         {"$lookup": {
