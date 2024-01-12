@@ -155,13 +155,17 @@ def get_stock_information(URL:str, sosok:int)->list:
         reference_information["stock_code"] = stock_code
         # 아래 두 가지 작업은 크롤링 후에 각 item의 stock_name만 가지고 진행해도 됨
         # 네이버 뉴스 API를 활용하여 관련 뉴스 정보를 가져옴f'"{stock_name}"'
-        reference_information["reference_news"] = get_news_information(f'+{stock_name} -상한가보드 -상한가종목',"sim")
-        reference_information["reference_news"] += get_news_information(f'+"{stock_name}" -상한가보드 -상한가종목',"sim")
-        reference_information["reference_news"] += get_news_information(f'특징주+"{stock_name}" -상한가보드 -상한가종목',"date")
+        news_info_list = get_news_information(f'특징주+"{stock_name}" -상한가보드 -상한가종목',"date")
+        news_info_list += get_news_information(f'+{stock_name} -상한가보드 -상한가종목',"sim")
+        news_info_list += get_news_information(f'+"{stock_name}" -상한가보드 -상한가종목',"date")
+
+        # 뉴스 정보를 최신순으로 정렬
+        for item in news_info_list:
+            item['refinePubDate'] = datetime.strptime(item['pubDate'], '%a, %d %b %Y %H:%M:%S %z').strftime("%Y-%m-%d")
+
+        reference_information["reference_news"] = sorted(news_info_list, key=lambda item: item['refinePubDate'], reverse = True) 
         # 수집된 뉴스 정보 중 오늘 날짜로부터 일주일 이내의 것만 수집
         pass_news_info = [ item for item in reference_information["reference_news"] if is_recent_news(item['pubDate'], current_time_utc_9)][:10]
-        # get_news_information(f'"특징주 {stock_name}"')
-        # get_news_information(f'"[특징주] {stock_name}"')
 
         # gpt로 뉴스 타이틀을 활용하여 상승 요인 추출
         target_mode = "falls" if reference_information['increase_rate'] < 0 else "rises"
@@ -183,7 +187,7 @@ async def insert_stock_info_to_db(stock_information:List[dict]):
         return db
 
     db = await get_db()
-    stock_collection = db.get_collection("test_stock")
+    stock_collection = db.get_collection("stock")
     result = await stock_collection.insert_many(stock_information)
 
     return result
