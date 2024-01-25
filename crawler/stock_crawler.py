@@ -100,7 +100,7 @@ def get_stock_information(URL:str, sosok:int)->list:
     Returns:
         list: 종목명, 현재가, 전일비, 등락률, 거래랑이 dictionary로 포함된 list
     """
-    # Linux 환경에서 chromdriver를 찾지 못하는 문제로 인해 추가
+    # UI 없이 실행하기 위한 option 추가
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")
 
@@ -153,7 +153,7 @@ def get_stock_information(URL:str, sosok:int)->list:
 
         reference_information["stock_name"] = stock_name
         reference_information["stock_code"] = stock_code
-        # 아래 두 가지 작업은 크롤링 후에 각 item의 stock_name만 가지고 진행해도 됨
+        # 아래 작업은 크롤링 완료 후에 각 item의 stock_name만 가지고 진행해도 됨
         # 네이버 뉴스 API를 활용하여 관련 뉴스 정보를 가져옴f'"{stock_name}"'
         news_info_list = get_news_information(f'특징주+"{stock_name}" -상한가보드 -상한가종목',"date")
         news_info_list += get_news_information(f'+{stock_name} -상한가보드 -상한가종목',"sim")
@@ -198,10 +198,10 @@ async def main():
     KOSPI_fall_info  = get_stock_information(URL_FALL,0)
     KOSDAQ_fall_info = get_stock_information(URL_FALL, 1)
 
-    await insert_stock_info_to_db(KOSPI_rise_info)
-    await insert_stock_info_to_db(KOSDAQ_rise_info)
-    await insert_stock_info_to_db(KOSPI_fall_info)
-    await insert_stock_info_to_db(KOSDAQ_fall_info)
+    result = [*KOSPI_rise_info, *KOSPI_fall_info, *KOSDAQ_rise_info, *KOSDAQ_fall_info]
+
+    if(len(result) > 0):
+        await insert_stock_info_to_db(result)
 
 if __name__ == "__main__":
     asyncio.run(main())
